@@ -1,0 +1,32 @@
+body{
+    background-color:cornflowerblue;
+}
+canvas{
+    background-color: lavender;
+    border: 2px solid gray;
+}
+
+
+.card-body {
+  text-align: center;
+}
+
+input{
+    display:block;
+}
+
+.row {
+    margin: 20px;
+  }
+
+  .toolbar {
+    background: #550000;
+    padding: 5px;
+    text-align: right;
+  }
+
+  .editor textarea {
+    width: 100%;
+    color:green;
+    font-weight: bold;
+  }

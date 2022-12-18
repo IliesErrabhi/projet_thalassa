@@ -1,0 +1,16 @@
+body{
+    background-color:cornflowerblue;
+}
+
+section {
+    width: 800px;
+    height: 600px;
+}
+
+canvas{
+    background-color: white;
+}
+
+input{
+    display:block;
+}

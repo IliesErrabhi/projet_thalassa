@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Thalassa</title>
+  <meta name="description" content="">
+  <meta name="author" content="Ilies ER RABHI,Fayçal Aït Taht">
+  <meta name="description" content="" />
+  <meta name="keywords" content="Thalassa,Morphing" />
+
+<!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+  <link rel="icon" href="./images/crayon.png" sizes="16*16" type="image/png">
+  
+  <link href="./styles/thalassa.css" rel="stylesheet" media="screen" type="text/css" />
+  
+  <script  src="./scripts/thalassa.js"></script>
+</head>
+<body>
+  <h1>Projet Thalassa</h1>
+  
+  <div class="row">
+
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <canvas width="400" height="300" id="draw_3"></canvas>  
+          <div class="editor">
+            <textarea cols="60" rows="10"  id="editor_3"></textarea>
+          </div>
+          <div class="toolbar">
+
+            <button type="button" class="btn btn-primary"   id="load_3_model_1">LOAD MODEL ONE</button>
+            <button type="button" class="btn btn-primary"   id="load_3_model_2">LOAD MODEL TWO</button>
+
+            <button type="button" class="btn btn-danger"  id="import_3">IMPORT</button>
+            <button type="button" class="btn btn-warning" id="export_3">EXPORT</button>
+
+
+            <button type="button" class="btn btn-warning" id="swap_3">==></button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-sm-6">
+      <div class="card" style="height: 100%">
+        <div class="card-body">
+          <canvas width="400" height="300" id="draw_1"></canvas>  
+          <div style="height: 250px;"></div>
+          <div class="toolbar">
+            <button type="button" class="btn btn-warning" id="swap_1"><==</button>
+            <button type="button" class="btn btn-primary"   id="clear_1">CLEAR</button>
+            <button type="button" class="btn btn-secondary" id="mirrorh_1">MIRROR H</button>
+            <button type="button" class="btn btn-secondary" id="mirrorv_1">MIRROR V</button>
+            <button type="button" class="btn btn-success"   id="undo_1">UNDO</button>
+            <button type="button" class="btn btn-success"   id="redo_1">REDO</button>            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+
+
+
+
+
+  </div>
+
+  <div class="row">
+    
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <canvas width="400" height="300" id="draw_4"></canvas>  
+          <div class="editor">
+            <textarea cols="60" rows="10" id="editor_4"></textarea>
+          </div>
+          <div class="toolbar">
+
+
+            <button type="button" class="btn btn-primary"   id="load_4_model_1">LOAD MODEL ONE</button>
+            <button type="button" class="btn btn-primary"   id="load_4_model_2">LOAD MODEL TWO</button>
+
+
+            <button type="button" class="btn btn-danger"  id="import_4">IMPORT</button>
+            <button type="button" class="btn btn-warning" id="export_4">EXPORT</button>
+            <button type="button" class="btn btn-warning" id="swap_4">==></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="card" style="height: 100%;">
+        <div class="card-body">
+          <canvas width="400" height="300" id="draw_2"></canvas>  
+          <div class="toolbar">
+            <button type="button" class="btn btn-warning" id="swap_2"><==</button>
+            <button type="button" class="btn btn-primary"   id="clear_2">CLEAR</button>
+            <button type="button" class="btn btn-secondary" id="mirrorh_2">MIRROR H</button>
+            <button type="button" class="btn btn-secondary" id="mirrorv_2">MIRROR V</button>
+            <button type="button" class="btn btn-success"   id="undo_2">UNDO</button>
+            <button type="button" class="btn btn-success"   id="redo_2">REDO</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  
+
+
+  <script type="text/javascript">
+      let model_1;
+      let model_2;
+
+
+      document.querySelector("#import_3").onclick = (e) => {
+      e.preventDefault();
+
+      const data = document.querySelector("#editor_3").value;
+
+
+      console.log(data);
+
+      let json = JSON.parse(data);
+
+      model_1 = new Model([]);
+
+      json.lines.forEach(element => {
+
+        let p1 = new Point(
+          element.from.x,
+          element.from.y
+        )
+
+        let p2 = new Point(
+          element.to.x,
+          element.to.y
+        )
+
+        
+        let color = new Color (
+          element.color.r,
+          element.color.g,
+          element.color.b
+        );
+
+       
+        model_1.addSegment(p1,p2,color);
+
+        console.log(model_1);
+
+      });
+
+      const ctz = document.querySelector("#draw_3").getContext('2d');
+      model_1.paint(ctz);
+
+    }
+
+
+
+
+    document.querySelector("#export_3").onclick = (e) => {
+      e.preventDefault();
+      document.querySelector("#editor_3").value = model_1.export();
+    }
+
+
+    document.querySelector("#export_4").onclick = (e) => {
+      e.preventDefault();
+      document.querySelector("#editor_4").value = model_2.export();
+    }
+
+
+    document.querySelector("#load_3_model_1").onclick = (e) => {
+      e.preventDefault();
+      const ctz = document.querySelector("#draw_3").getContext('2d');
+      model_1 = new Model(model_one);
+      model_1.paint(ctz);
+    }
+
+
+    document.querySelector("#load_3_model_2").onclick = (e) => {
+      e.preventDefault();
+      const ctz = document.querySelector("#draw_3").getContext('2d');
+      model_1 = new Model(model_two);
+      model_1.paint(ctz);
+    }
+
+    document.querySelector("#load_4_model_1").onclick = (e) => {
+      e.preventDefault();
+      const ctz = document.querySelector("#draw_4").getContext('2d');
+      model_2 = new Model(model_one);
+      model_2.paint(ctz);
+    }
+
+
+    document.querySelector("#load_4_model_2").onclick = (e) => {
+      e.preventDefault();
+      const ctz = document.querySelector("#draw_4").getContext('2d');
+      model_2 = new Model(model_two);
+      model_2.paint(ctz);
+    }
+
+
+  //SWAPPING BOARDS
+  document.querySelector("#swap_3").onclick = (e) => {
+      let modelLeft = model_1;
+      model_1 = whiteboard_1.model;
+      whiteboard_1.model=modelLeft;
+      const ctz = document.querySelector("#draw_3").getContext('2d');
+      model_1.paint(ctz);
+      whiteboard_1.paint();
+  }
+  
+
+  document.querySelector("#swap_1").onclick = (e) => {
+      let modelLeft = model_1;
+      model_1 = whiteboard_1.model;
+      whiteboard_1.model=modelLeft;
+      const ctz = document.querySelector("#draw_3").getContext('2d');
+      model_1.paint(ctz);
+      whiteboard_1.paint();
+  }
+
+
+
+  document.querySelector("#swap_4").onclick = (e) => {
+      let modelLeft = model_2;
+      model_2 = whiteboard_2.model;
+      whiteboard_2.model=modelLeft;
+      const ctz = document.querySelector("#draw_4").getContext('2d');
+      model_2.paint(ctz);
+      whiteboard_2.paint();
+  }
+  
+  document.querySelector("#swap_2").onclick = (e) => {
+      let modelLeft = model_2;
+      model_2 = whiteboard_2.model;
+      whiteboard_2.model=modelLeft;
+      const ctz = document.querySelector("#draw_4").getContext('2d');
+      model_2.paint(ctz);
+      whiteboard_2.paint();
+  }
+  
+
+
+
+
+
+
+
+    //WHITEBOARDS
+
+    let canvas_1 = document.querySelector("#draw_1");
+    let whiteboard_1 = new Whiteboard(canvas_1);
+
+    whiteboard_1.setClear(document.querySelector("#clear_1"));
+    whiteboard_1.setUndo(document.querySelector("#undo_1"));
+    whiteboard_1.setRedo(document.querySelector("#redo_1"));
+    whiteboard_1.setMirrorH(document.querySelector("#mirrorh_1"));
+    whiteboard_1.setMirrorV(document.querySelector("#mirrorv_1"));
+
+
+    let canvas_2 = document.querySelector("#draw_2");
+    let whiteboard_2 = new Whiteboard(canvas_2);
+
+    whiteboard_2.setClear(document.querySelector("#clear_2"));
+    whiteboard_2.setUndo(document.querySelector("#undo_2"));
+    whiteboard_2.setRedo(document.querySelector("#redo_2"));
+    whiteboard_2.setMirrorH(document.querySelector("#mirrorh_2"));
+    whiteboard_2.setMirrorV(document.querySelector("#mirrorv_2"));
+
+
+  </script>
+
+
+</body>
+</html>
+
