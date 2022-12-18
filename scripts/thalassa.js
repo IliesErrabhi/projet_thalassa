@@ -327,12 +327,14 @@ class Whiteboard  {
      ctx;
      undoElement;
      redoElement;
+     isdown;
     
 
     constructor(canvas) {
 
         canvas.addEventListener("mousedown", (e) => this.point_start(e), false);
         canvas.addEventListener("mouseup",   (e) => this.point_end(e), false);
+        canvas.addEventListener("mousemove", (e) => this.pendingLine(e), false);
 
         this.canvas = canvas;
         this.ctx    = canvas.getContext('2d');
@@ -340,6 +342,7 @@ class Whiteboard  {
         this.height = canvas.height;
         this.bounds = canvas.getBoundingClientRect();    
         this.model  = new Model([]);
+        this.isdown = false;
     }
   
 
@@ -366,9 +369,36 @@ class Whiteboard  {
         const x = e.clientX - this.bounds.left;
         const y = e.clientY - this.bounds.top;
         this.point = new Point (x,y);
+        this.isdown = true;
     } 
 
+
+    pendingLine = (e) => {
+        if (this.isdown) {
+            console.log('pendingLine');
+            const x = e.clientX - this.bounds.left;
+            const y = e.clientY - this.bounds.top;
+            
+            this.model.paint(this.ctx);
+
+            this.ctx.strokeStyle = 'red';
+            this.ctx.lineWidth = 5;
+            this.ctx.beginPath();
+            this.ctx.setLineDash([10, 4]);
+            this.ctx.moveTo((this.point.x()), this.point.y());
+            this.ctx.lineTo(x,y);
+            this.ctx.stroke();
+            this.ctx.setLineDash([]);
+            
+
+        } 
+       
+
+    } 
+
+
     point_end = (e) => {
+        this.isdown = false;
         const x = e.clientX - this.bounds.left;
         const y = e.clientY - this.bounds.top;
         
