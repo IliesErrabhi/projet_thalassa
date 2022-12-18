@@ -211,14 +211,112 @@
     }
 
 
+
+
+    let morphTimer;
+
+
   //SWAPPING BOARDS
   document.querySelector("#swap_3").onclick = (e) => {
-      let modelLeft = model_1;
+
+      let l1 = model_1.size();
+      let l2 = whiteboard_1.model.size();
+
+      if (l1 == l2) {
+        console.log ("equality");
+
+        for(i=0; i < l1; i++) {
+          anim(i);
+        }
+
+
+      } else {
+        console.log (l1 + "<inequality>" + l2);
+          let modelLeft = model_1;
       model_1 = whiteboard_1.model;
       whiteboard_1.model=modelLeft;
       const ctz = document.querySelector("#draw_3").getContext('2d');
       model_1.paint(ctz);
       whiteboard_1.paint();
+
+      }
+
+  }
+
+
+  anim = (i) => {
+          let s1 = model_1.getSegment(i);
+          let s2 = whiteboard_1.model.getSegment(i);
+
+          let dx1= 5;
+          let dy1= 5;
+          let dx2= 5;
+          let dy2= 5;
+
+          if (s1.p1().x() < s2.p1().x()) {
+              dx1*=-1
+          }
+
+          if (s1.p1().y() < s2.p1().y()) {
+              dy1*=-1
+          }
+
+
+          if (s1.p2().x() < s2.p2().x()) {
+              dx2*=-1
+          }
+
+          if (s1.p2().y() < s2.p2().y()) {
+              dy2*=-1
+          }
+
+
+
+        //clearInterval(morphTimer);
+
+        //morphing 
+        morphTimer = setInterval(() => {
+
+          s2 = whiteboard_1.model.getSegment(i);
+
+          whiteboard_1.model.setSegment(i,           
+            new Segment( 
+              new Point(
+                  s2.p1().x() + dx1,
+                  s2.p1().y() + dy1
+              ),
+              new Point(
+                  s2.p2().x() + dx2 ,
+                  s2.p2().y() + dy2 
+              ),
+              s2.color()));
+
+          whiteboard_1.paint();
+
+
+          if (Math.abs (s1.p1().x() - s2.p1().x()) < 10 ) {
+              dx1 =0;
+          }
+
+          if (Math.abs (s1.p1().y() - s2.p1().y()) < 10 ) {
+              dy1 =0;
+          }
+
+
+          if (Math.abs (s1.p2().x() - s2.p2().x()) < 10 ) {
+              dx2 =0;
+          }
+
+          if (Math.abs (s1.p2().y() - s2.p2().y()) < 10 ) {
+              dy2 =0;
+          }
+
+          if (Math.abs(dx1)+Math.abs(dy1)+Math.abs(dx2)+Math.abs(dy2) == 0) {
+            clearInterval(this);
+          }
+
+
+          }, 50);
   }
   
 

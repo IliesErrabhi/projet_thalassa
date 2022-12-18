@@ -174,7 +174,6 @@ class Segment {
 
 
 class Model {
-   
 
     constructor(tab) {
         this.dataModel = [];
@@ -193,6 +192,23 @@ class Model {
             this.addSegment(p1,p2,color);
 
         });
+    }
+
+
+    size = () =>  this.dataModel.length;
+
+
+
+    getSegment = (index) => {
+        if (index > -1 && index < this.size()) {
+            return this.dataModel[index];
+        }
+    }
+
+    setSegment = (index, segment) => {
+        if (index > -1 && index < this.size()) {
+            this.dataModel[index] = segment;
+        }
     }
 
 
